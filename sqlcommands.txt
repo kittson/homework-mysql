@@ -1,0 +1,45 @@
+CREATE DATABASE Bamazon;
+USE Bamazon;
+
+CREATE TABLE Products (
+	ItemID MEDIUMINT NOT NULL AUTO_INCREMENT,
+	ProductName VARCHAR(100) NOT NULL,
+	DepartmentName VARCHAR(100),
+	PriceCost FLOAT NOT NULL,
+	StockQuantity MEDIUMINT NOT NULL,
+	PRIMARY KEY (ItemID)
+);
+INSERT INTO Products
+	(ProductName,DepartmentName,PriceCost,StockQuantity)
+	VALUES ("flying sheep", "sheep-aircraft", "4235.00", 76),
+	("egg and spam", "spam", "99.00", 5),
+	("egg bacon and spam", "spam", "3.00", 5),
+	("spam sandwich", "spam", "90.00", 14),
+	("spam egg sausage and spam", "spam", "16.99", 22),
+	("Red Windsor", "comestibles", "42.00", 8),
+	("spam sandwich", "spam", "90.00", 5),
+	("Venezuelan beaver cheese", "comestibles", "12.99", 52),
+	("comfy chair, yellow", "torture devices", "300.00", 2),
+	("comfy chair, blue", "torture devices", "300.00", 3)
+
+PRIMARY KEY (ItemID);
+
+CREATE TABLE favorite_movies (
+	film VARCHAR(100) NOT NULL,
+	five_times BOOLEAN,
+	score INTEGER(10)	
+);
+INSERT INTO people
+	(name,has_pet,pet_name,pet_age)
+	VALUES ("joe", true, "foo foo", 22);
+
+SELECT COUNT(*) FROM people;
+UPDATE people SET name='Maggie' WHERE name='Bart';
+
+INSERT INTO favorite_foods (ID,food,score) VALUES (1,"broccoli", 10);
+INSERT INTO favorite_foods (ID,food,score) VALUES (2,"broccoli", 8);
+INSERT INTO favorite_foods (ID,food,score) VALUES (3,"ice cream", 1);
+
+ALTER TABLE favorite_foods ADD foodie INTEGER,
+PRIMARY KEY (foodie);
+
