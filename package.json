@@ -1,0 +1,25 @@
+{
+  "name": "homework-mysql",
+  "version": "1.0.0",
+  "description": "repo for homework # 8, week 12 mysql plus node.js",
+  "main": "bamcustomer.js",
+  "dependencies": {
+    "inquirer": "^1.1.2",
+    "mysql": "^2.11.1",
+    "save": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kittson/homework-mysql.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kittson/homework-mysql/issues"
+  },
+  "homepage": "https://github.com/kittson/homework-mysql#readme"
+}
