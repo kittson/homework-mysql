@@ -1,5 +1,4 @@
 var inquirer = require('inquirer');
-var syncoprompt = require('syncoprompt');
 var mysql = require('mysql');
 var connection;
 var itemNum;
@@ -59,30 +58,34 @@ var showProducts = function(){
 };
 
 var getCreds = function(){
+	var DB;
 	var userName;
 	var passWord;
-	inquirer.prompt({
+	inquirer.prompt([{
+		name: "database",
+		type: "input",
+		message: "Name of your mySQL database:\n"
+	},{
 		name: "username",
 		type: "input",
-		message: "Username for SQL database access:\n",
-	}).then(function(answer) {
+		message: "Username for SQL database access:\n"
+	},{
+		name: "pass",
+		type: "password",
+		message: "Password:\n"		
+	}]).then(function(answer) {
+		DB = answer.database;
 		userName = answer.username;
-		inquirer.prompt({
-			name: "pass",
-			type: "password",
-			message: "Password:\n",
-		}).then(function(answer) {
-			passWord = answer.pass;
-			connection = mysql.createConnection({
-				host     : 'localhost',
-				user     : userName,
-				password : passWord,
-				database : 'bamazon'
-			});
-			connection.connect();
+		passWord = answer.pass;		
+		connection = mysql.createConnection({
+			host     : 'localhost',
+			user     : userName,
+			password : passWord,
+			database : 'bamazon'
+		});
+		connection.connect();
 		//start the program
 		showProducts();
-		});//get password
 	});// get username		
 };//function getCreds()
 
