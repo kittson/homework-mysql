@@ -2,6 +2,9 @@ var inquirer = require('inquirer');
 var mysql = require('mysql');
 var connection;
 var itemNum;
+var dbName; //to hold database name
+var shown = false;
+//var show = require('./showprods.js');
 
 var startBamazon = function() {
 	inquirer.prompt({
@@ -10,13 +13,13 @@ var startBamazon = function() {
 		message: "What item would you like to purchase?  Choose by Item #\n",
 	}).then(function(answer) {
 		itemNum = Number(answer.pickItem);				
-		var queryString = 'SELECT ItemID, ProductName, PriceCost, StockQuantity FROM products WHERE ItemID = ' + itemNum;
+		var queryString = 'SELECT ItemID, ProductName, Price, StockQuantity FROM products WHERE ItemID = ' + itemNum;
 		connection.query(queryString, function(err, rows, fields) {
 			if (err) { 
 				throw err;
 			}
 			else {				
-				console.log('you chose #' + rows[0].ItemID + ' ' + rows[0].ProductName + ' at $' + rows[0].PriceCost); 
+				console.log('you chose #' + rows[0].ItemID + ' ' + rows[0].ProductName + ' at $' + rows[0].Price); 
 				inquirer.prompt({ //to find out how many they want
 					name: "howMany",
 					type: "input",
@@ -24,7 +27,7 @@ var startBamazon = function() {
 					+ "We have " + rows[0].StockQuantity + " available\n",
 				}).then(function(answer) {
 					var numAvail = Number(rows[0].StockQuantity);
-					var cost = Number(rows[0].PriceCost);
+					var cost = Number(rows[0].Price);
 					if(answer.howMany <= numAvail) {
 						console.log("That's $" + (answer.howMany * cost));
 						var left = numAvail - answer.howMany;
@@ -33,6 +36,8 @@ var startBamazon = function() {
 						connection.query(queryString, function(err, rows, fields) {
 							if (err) throw err;
 							console.log("Updated ");
+							shown = true;
+							showProducts();
 							connection.end();
 						});
 					}//if
@@ -42,8 +47,8 @@ var startBamazon = function() {
 	});//then from inquirer
 };//startBamazon
 
-var showProducts = function(){	
-	var queryString = 'SELECT ItemID, ProductName, DepartmentName, PriceCost FROM products';
+var showProducts = function(){			
+	var queryString = 'SELECT ItemID, ProductName, DepartmentName, Price, StockQuantity FROM ' + dbName + '.products';
 	connection.query(queryString, function(err, rows, fields) {
 		if (err) throw err;
 		for (var i in rows) {
@@ -51,14 +56,16 @@ var showProducts = function(){
 				+ rows[i].ProductName 
 				+ ', Department: '  
 				+ rows[i].DepartmentName 
-				+ ', $' + rows[i].PriceCost);
+				+ ', $' + rows[i].Price
+				+ ', in stock: ' + rows[i].StockQuantity);
 		}
 	});
-	startBamazon();		
+	if(!shown){
+		startBamazon();
+	}				
 };
 
-var getCreds = function(){
-	var DB;
+var getCreds = function(){	
 	var userName;
 	var passWord;
 	inquirer.prompt([{
@@ -74,19 +81,19 @@ var getCreds = function(){
 		type: "password",
 		message: "Password:\n"		
 	}]).then(function(answer) {
-		DB = answer.database;
+		dbName = answer.database;
 		userName = answer.username;
 		passWord = answer.pass;		
 		connection = mysql.createConnection({
 			host     : 'localhost',
 			user     : userName,
 			password : passWord,
-			database : 'bamazon'
+			database : dbName
+			//database : 'bamazon'
 		});
 		connection.connect();
 		//start the program
 		showProducts();
 	});// get username		
 };//function getCreds()
-
 getCreds();
