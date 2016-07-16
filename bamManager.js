@@ -40,7 +40,7 @@ var managerList = function() {
 			console.log("No item chosen\n");
 			managerList();
       }//switch
-  });
+   });
 };//function
 manage = {
 	showProducts : function(){	
@@ -101,18 +101,19 @@ manage = {
 				}//else
 			});//prompt.get
 	    }//if	
-	},
-	addNewProduct : function(){	
-		var newProd;		
-		if(!newProd){
-			prompt.start();
-			prompt.get(['NewProductName', 'NewPrice', 'ProductInventory'], function(err, result) {
-				var prodName = result.NewProductName;
-				var newPrice = result.NewPrice;
-				var stockQuan = result.ProductInventory;
-				if (!prodName || !newPrice || !stockQuan){
-					console.log("Whoops!  Didn't get that.");          
-				}
+	 },
+	 addNewProduct : function(){	
+	 	var newProd;		
+	 	if(!newProd){
+	 		prompt.start();
+	 		prompt.get(['NewProductName', 'NewPrice', 'ProductInventory'], function(err, result) {
+	 			var prodName = result.NewProductName;
+	 			var newPrice = result.NewPrice;
+	 			var stockQuan = result.ProductInventory;
+	 			if (!prodName || !newPrice || !stockQuan){
+
+	 				console.log("Whoops!  Didn't get that.");          
+	 			}
 				else {//now give the user the department choices
 					inquirer.prompt({
 						name: "pickDepartment",
@@ -141,20 +142,31 @@ manage = {
 							default:
 							console.log("No department chosen\n  Don't you like spam?\n");
 							managerList();
-				      	}//switch				      
-					      var queryString = 'INSERT INTO ' + dbName + '.products ( ProductName, Price, StockQuantity, DepartmentName) '
-					      + ' VALUES (' + prodName
-					      + ', ' + newPrice
-					      + ', ' + stockQuan
-					      + ', ' + depName
-					      + ');'
-					      console.log("query " + queryString);
-					      connection.query(queryString, function(err, rows, fields) {
-							if (err) throw err;
-					  	});	
-					  	});								
-				};
-		});//if
+				      }//switch
+				      console.log("You've added " + stockQuan + " to " 
+				      	+ prodName + " in " 
+				      	+ depName + " department, at $"  
+				      	+ newPrice + " price.");
+				      managerList();
+				   });					
+				}//else
+			});
+		}//if
+		/*			var queryString = 'SELECT ItemID, ProductName, DepartmentName, Price, StockQuantity FROM ' + dbName + '.products';
+		connection.query(queryString, function(err, rows, fields) {
+			if (err) throw err;
+			for (var i in rows) {
+				if(rows[i].StockQuantity <= 5) {
+					console.log('Item #' + rows[i].ItemID + ', ' 
+						+ rows[i].ProductName 
+						+ ', Department: '  
+						+ rows[i].DepartmentName 
+						+ ', $' + rows[i].Price
+						+ ', in stock: ' + rows[i].StockQuantity);
+				}
+			}
+			managerList();	
+		});		*/
 	},
 	quit : function(){
 		console.log("Bye!\n");
